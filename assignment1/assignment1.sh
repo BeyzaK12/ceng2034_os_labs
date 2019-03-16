@@ -26,6 +26,10 @@ cp $loc/x1.sh ~/myRoot
 
 
 #chroot
+<<<<<<< HEAD
+sudo chroot ~/myRoot /bin/bash ./x1.sh
+=======
+>>>>>>> d11fed8c6aa9e226eb90335fa8fc3a0cf9514fa2
 sudo chroot ~/myRoot /bin/bash
 
 
@@ -34,4 +38,7 @@ sudo chroot ~/myRoot /bin/bash
 
 
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> d11fed8c6aa9e226eb90335fa8fc3a0cf9514fa2
