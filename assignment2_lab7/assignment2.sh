@@ -34,10 +34,42 @@ fi
 
 #Enter a new entry in GRUB with an iso under your home directory
 
-if [ ! ~/alpine.iso ]; then
+echo ""
+echo "Can I add a new entry for the GRUB? (yes or no)"
+read answer
+
+case $answer in
+
+	yes | YES | Y | y)
+
+	sudo echo "
+	menuentry 'Ubuntu Mini ' {
+
+	set isofile="~/ubuntum.iso"
+
+	loopback loop (hd0,msdos1)$isofile
+
+	linux (loop)/casper/vmlinuz boot=casper iso-scan/filename=$isofile noprompt noeject
+
+	initrd (loop)/casper/initrd.lz
+
+	}">>/etc/grub.d/40_custom
+
+	echo "I added a new entry for the GRUB"
+	;;
+
+	*)
+	echo "Okey, see you!"
+	exit
+	;;
+
+esac
+
+
+if [ ! ~/ubuntum.iso ]; then
 
 	echo ""
-	echo "For next step, I want to download the ISO file; Alpine Standard x86"
+	echo "To complete the task, I want to download the ISO file; Ubuntu 18.04 'Bionic Beaver' (64MB)"
 	echo "Do you give me the permission? (yes or no)"
 	read ANSWER
 	
@@ -51,13 +83,15 @@ if [ ! ~/alpine.iso ]; then
 				case $sys in
 	
 					64)
-						wget -O ~/alpine.iso "dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86_64/alpine-standard-3.9.4-x86_64.iso"
+						wget -O ~/ubuntum.iso "archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso"
 						;;
 					32)
-						wget -O ~/alpine.iso "dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86/alpine-standard-3.9.4-x86.iso"
+						wget -O ~/ubuntum.iso "archive.ubuntu.com/ubuntu/dists/bionic/main/installer-i386/current/images/netboot/mini.iso"
 						;;
 					*)
-						echo "You had to write 64 or 32."
+						echo "You had to write 64 or 32"
+						echo "I will update GRUB and exit"
+						sudo update-grub
 						exit
 						;;
 				esac
@@ -65,8 +99,17 @@ if [ ! ~/alpine.iso ]; then
 	
 		*)
 			echo "I can not continue. Try again if you change your decision."
+			echo "I will update GRUB and exit"
+			sudo update-grub
 			exit
 			;;
 	esac
 fi
+
+sudo update-grub
+
+
+
+
+
 
