@@ -6,6 +6,15 @@ I wanted to write a bash script code, but when I wanted to add new lines with "e
 
 I add files "myMBR.txt" and "40_custom", but also I want to write my terminal steps.
 
+
+**************************************************************************************************
+I tried for Ubuntu 18.04, but after I uploaded files, I decided to try for Ubuntu Server version.
+Because I realized there are something wrong.
+
+40_custom -> for Ubuntu 18.04 "Bionic Beaver"
+40_custom1 -> for Ubuntu Server 19.04
+**************************************************************************************************
+
 ----------------------------------------------------------------------------------
 1) Read your MBR and write it into a file
 ----------------------------------------------------------------------------------
@@ -53,6 +62,19 @@ beyza@beyzak12:~$
 2) Enter a new entry in GRUB with an iso under your home directory
 ----------------------------------------------------------------------------------
 
+beyza@beyzak12:~$ wget -O ~/ubuntu_server.iso "releases.ubuntu.com/19.04/ubuntu-19.04-live-server-amd64.iso?_ga=2.2853168.1467108717.1557705056-1142080764.1557705056"
+
+--2019-05-14 01:06:57--  http://releases.ubuntu.com/19.04/ubuntu-19.04-live-server-amd64.iso?_ga=2.2853168.1467108717.1557705056-1142080764.1557705056
+Resolving releases.ubuntu.com (releases.ubuntu.com)... 91.189.88.160, 2001:67c:1360:8001::26
+Connecting to releases.ubuntu.com (releases.ubuntu.com)|91.189.88.160|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 784334848 (748M) [application/x-iso9660-image]
+Saving to: ‘/home/beyza/ubuntu_server.iso’
+
+/home/beyza/ubuntu_server.iso       100%[=================================================================>] 748,00M   957KB/s    in 17m 22s 
+
+2019-05-14 01:24:18 (735 KB/s) - ‘/home/beyza/ubuntu_server.iso’ saved [784334848/784334848]
+
 beyza@beyzak12:~$ sudo chmod +w /etc/grub.d/40_custom
 beyza@beyzak12:~$ sudo nano /etc/grub.d/40_custom
 
@@ -63,13 +85,12 @@ exec tail -n +3 $0
 # the 'exec tail' line above.
 
 #I write this part
-menuentry 'Ubuntu Mini ' {
+menuentry 'Ubuntu Server' {
 
-        set isofile="/home/beyza/ubuntum.iso"
+        set isofile="/home/beyza/ubuntu_server.iso"
         loopback loop (hd0)$isofile
         linux (loop)/casper/vmlinuz boot=casper iso-scan/filename=$isofile noprompt noeject
-        initrd (loop)/casper/initrd.lz
-
+        initrd (loop)/casper/initrd
 }
 
 beyza@beyzak12:~$ sudo update-grub
@@ -89,32 +110,4 @@ beyza@beyzak12:~$
 ----------------------------------------------------------------------------------
 3) Bonus points: Run the new operation system on GRUB entirely on the ram
 ---------------------------------------------------------------------------------- 
-
-beyza@beyzak12:~$ wget -O ~/ubuntum.iso "archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso"
-
---2019-05-13 20:09:03--  http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso
-Resolving archive.ubuntu.com (archive.ubuntu.com)... 91.189.88.149, 91.189.88.161, 91.189.88.162, ...
-Connecting to archive.ubuntu.com (archive.ubuntu.com)|91.189.88.149|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 67108864 (64M) [application/x-iso9660-image]
-Saving to: ‘/home/beyza/ubuntum.iso’
-
-/home/beyza/ubuntum.iso             100%[=================================================================>]  64,00M   635KB/s    in 1m 49s  
-
-2019-05-13 20:10:53 (599 KB/s) - ‘/home/beyza/ubuntum.iso’ saved [67108864/67108864]
-
-beyza@beyzak12:~$ sudo update-grub
-
-Sourcing file `/etc/default/grub'
-Generating grub configuration file ...
-Found linux image: /boot/vmlinuz-4.18.0-16-generic
-Found initrd image: /boot/initrd.img-4.18.0-16-generic
-Found linux image: /boot/vmlinuz-4.18.0-15-generic
-Found initrd image: /boot/initrd.img-4.18.0-15-generic
-Found memtest86+ image: /boot/memtest86+.elf
-Found memtest86+ image: /boot/memtest86+.bin
-done
-
-beyza@beyzak12:~$ reboot
------------------------------------------------------------------------------------
 
